@@ -2,6 +2,7 @@
 # Copyright (C) Electronic Arts Inc.  All rights reserved.
 #-------------------------------------------------------------------------------------------
 cmake_minimum_required(VERSION 3.1)
+project(EAMain CXX)
 
 #-------------------------------------------------------------------------------------------
 # Header only library 
@@ -9,14 +10,14 @@ cmake_minimum_required(VERSION 3.1)
 add_library(EAMain INTERFACE)
 
 #-------------------------------------------------------------------------------------------
-# Compiler Flags
+# Source files
 #-------------------------------------------------------------------------------------------
-set(CMAKE_CXX_STANDARD 11)
+file(GLOB EAMAIN_SOURCES "include/EAMain/*.*")
 
 #-------------------------------------------------------------------------------------------
-# exported include directories 
+# exported include directories
 #-------------------------------------------------------------------------------------------
 target_include_directories(EAMain INTERFACE include)
 
-
-
+# Workaround to have header files show up in IDEs
+add_custom_target(EAMain_ide SOURCES ${EAMAIN_SOURCES})

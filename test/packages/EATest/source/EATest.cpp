@@ -36,7 +36,7 @@
         #include <Windows.h>
         extern "C" WINBASEAPI BOOL WINAPI IsDebuggerPresent();
 
-    #if EA_WINAPI_FAMILY_PARTITION(EA_WINAPI_PARTITION_DESKTOP)
+    #if EA_WINAPI_FAMILY_PARTITION(EA_WINAPI_PARTITION_DESKTOP) && !defined(EA_COMPILER_CLANG)
         #pragma comment(lib, "Advapi32.lib"); // For CheckTokenMembership and friends.
     #endif
 
@@ -127,6 +127,7 @@ namespace UnitTest
                     if(pBuffer)
                     {
                         #if defined(EA_COMPILER_VA_COPY_REQUIRED)
+                            va_end(arguments);
                             va_copy(arguments, argumentsSaved);
                         #endif
                         EA::StdC::Vsnprintf(pBuffer, nReturnValue + 1, pFormat, arguments);
@@ -138,6 +139,9 @@ namespace UnitTest
                 }
 
                 va_end(arguments);
+                #if defined(EA_COMPILER_VA_COPY_REQUIRED)
+                    va_end(argumentsSaved);
+                #endif
             }
 
             return bExpression ? 0 : 1;
@@ -178,6 +182,7 @@ namespace UnitTest
                     if(pBuffer)
                     {
                         #if defined(EA_COMPILER_VA_COPY_REQUIRED)
+                            va_end(arguments);
                             va_copy(arguments, argumentsSaved);
                         #endif
                         EA::StdC::Vsnprintf(pBuffer, nReturnValue + 1, pFormat, arguments);
@@ -191,6 +196,9 @@ namespace UnitTest
                 IncrementGlobalErrorCount(nErrorCount);
 
                 va_end(arguments);
+                #if defined(EA_COMPILER_VA_COPY_REQUIRED)
+                    va_end(argumentsSaved);
+                #endif
             }
 
             return nErrorCount;
